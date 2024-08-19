@@ -15,3 +15,37 @@ export const fetchTrendingMovies = async () => {
   });
   return response.data.results;
 };
+
+export const requestMovieDetails = async (movieId) => {
+  const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+    headers,
+  });
+  return response.data;
+};
+
+export const searchMovies = async (query) => {
+  const response = await axios.get(`${BASE_URL}/search/movie`, {
+    params: {
+      query,
+      language: "en-US",
+      include_adult: false,
+      page: 1,
+    },
+    headers,
+  });
+  return response.data.results;
+};
+
+export const fetchMovieCast = async (movieId) => {
+  const response = await axios.get(`${BASE_URL}/movie/${movieId}/credits`, {
+    headers,
+  });
+  return response.data.cast;
+};
+
+export const fetchMovieReviews = async (movieId) => {
+  const response = await axios.get(`${BASE_URL}/movie/${movieId}/reviews`, {
+    headers,
+  });
+  return response.data.results;
+};
