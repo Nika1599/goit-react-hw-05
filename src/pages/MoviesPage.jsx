@@ -1,15 +1,33 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { searchMovies } from "../services/api";
 import MovieList from "../components/MovieList/MovieList";
 
 function MoviesPage() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
+  const queryTerm = searchParams.get("query") || "";
+
+  useEffect(() => {
+    const fetchMoviesBySearchValue = async () => {
+      try {
+        if (queryTerm) {
+          const data = await searchMovies(queryTerm);
+          setMovies(data);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    fetchMoviesBySearchValue();
+  }, [queryTerm]);
+
   const handleSearch = () => {
-    searchMovies(query).then(setMovies);
+    setSearchParams({ query: query });
   };
 
   return (
@@ -22,6 +40,7 @@ function MoviesPage() {
         placeholder="Search movies..."
       />
       <button onClick={handleSearch}>Search</button>
+      {error && <p>Error: {error}</p>}
       <MovieList movies={movies} location={location} />
     </div>
   );

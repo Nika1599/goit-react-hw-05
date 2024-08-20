@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Link,
   NavLink,
@@ -15,7 +15,9 @@ const MovieDetailsPage = () => {
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState(null);
   const location = useLocation();
-  const backLinkLocation = location.state?.from || "/movies"; // Спрощений рядок
+
+  // Використовуємо useRef для збереження backLinkLocation
+  const backLinkLocationRef = useRef(location.state?.from || "/movies");
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -34,7 +36,7 @@ const MovieDetailsPage = () => {
 
   return (
     <div>
-      <Link to={backLinkLocation}>⬅ Go back</Link>
+      <Link to={backLinkLocationRef.current}>⬅ Go back</Link>
       <h1>{movie.title}</h1>
       <p>{movie.overview}</p>
       <img
